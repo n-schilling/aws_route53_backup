@@ -1,33 +1,32 @@
-plugins:
-  - serverless-pseudo-parameters
-  - serverless-plugin-tracing
-
 service: Route53Backup
 
 custom:
-  s3BucketName: '<your bucket name>' # the name must be globaly unique
-  backupInterval: 6 # backup interval in full hours
+  s3BucketName: 'route53backup.ciug.internal' # the name must be globaly unique
+  backupInterval: 24 # backup interval in full hours
 
 provider:
   name: aws
   runtime: python3.6
-  stage: dev
-  region: eu-west-1
-  tracing: true
   cfLogs: true
+  logRetentionInDays: 7
+  tracing:
+    lambda: true
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - "route53:*"
+        - "route53:ListHostedZones"
+        - "route53:ListResourceRecordSets"
       Resource: "*"
     - Effect: Allow
       Action:
-        - "s3:*"
+        - "s3:PutObject"
       Resource:
-        - "arn:aws:s3:::${self:custom.s3BucketName}"
         - "arn:aws:s3:::${self:custom.s3BucketName}/*"
   iamManagedPolicies:
     - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+
+package:
+  artifact: index.py
 
 functions:
   Route53Backup:
@@ -40,16 +39,12 @@ functions:
       AWS_XRAY_CONTEXT_MISSING: LOG_ERROR
       AWS_XRAY_TRACING_NAME: Route53Backup
     events:
-      - schedule: rate(2 hours)
+      - schedule: rate(${self:custom.backupInterval} hours)
 
 resources:
   Resources:
-    S3WhitepaperArchive:
+    Route53Archive:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.s3BucketName}
         AccessControl: 'Private'
-
-    Route53BackupLogGroup:
-      Properties:
-        RetentionInDays: 7

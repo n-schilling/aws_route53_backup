@@ -30,11 +30,8 @@ Please follow all the steps below to deploy the solution. Please pay attention t
 ## Requirements
 
 * Python 3 (tested with version 3.7.0)
-* Node.js (tested with version 10.15.1)
-* Serverless (tested with version 1.37.1)
-* Serverless Plugins
-  * AWS Pseudo Parameters (install via ```npm install serverless-pseudo-parameters```)
-  * serverless plugin tracing (install via ```npm install serverless-plugin-tracing```)
+* Node.js (tested with version 12.12.0)
+* Serverless (tested with version 1.57.0)
 
 ## Deploy the solution
 
@@ -42,7 +39,7 @@ Please follow all the steps below to deploy the solution. Please pay attention t
 2. Edit the parameters in the serverless.yml
   * s3BucketName: The AWS S3 bucket where the backup files are stored
   * backupInterval: Backup interval in full hours (1,2,3...)
-3. Deploy the solution to AWS with ```sls deploy --region eu-west-1 --stage prod```.
+3. Deploy the solution to AWS with ```sls deploy --region eu-central-1 --stage dev```.
 4. Check the first backup file in the configured S3 bucket to make sure that the backup solution works
 
 ### Undeploy the solution
