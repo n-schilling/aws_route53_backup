@@ -6,8 +6,7 @@ custom:
 
 provider:
   name: aws
-  runtime: python3.6
-  cfLogs: true
+  runtime: python3.7
   logRetentionInDays: 7
   tracing:
     lambda: true
