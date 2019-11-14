@@ -15,6 +15,7 @@ provider:
       Action:
         - "route53:ListHostedZones"
         - "route53:ListResourceRecordSets"
+        - "route53:ListHostedZonesByName"
       Resource: "*"
     - Effect: Allow
       Action:
@@ -25,7 +26,8 @@ provider:
     - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
 
 package:
-  artifact: index.py
+  include:
+  - index.py
 
 functions:
   Route53Backup:
