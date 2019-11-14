@@ -3,6 +3,7 @@ service: Route53Backup
 custom:
   s3BucketName: 'route53backup.ciug.internal' # the name must be globaly unique
   backupInterval: 24 # backup interval in full hours
+  timeout: 120 # function timeout
 
 provider:
   name: aws
@@ -34,7 +35,7 @@ functions:
     handler: index.handler
     description: Route53Backup
     memorySize: 128
-    timeout: 10
+    timeout: ${self:custom.timeout}
     environment:
       s3BucketName: ${self:custom.s3BucketName}
       AWS_XRAY_CONTEXT_MISSING: LOG_ERROR
